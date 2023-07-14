@@ -1,0 +1,42 @@
+============================================================
+Log File "Log.txt" Has Been Created Successfully !!!
+============================================================
+
+Found Frame Buffers Configs are 24
+Visual Info = 0X33 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1618 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1736 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1738 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1650 Found Sample Buffers =1 & Samples = 2
+Visual Info = 0X1653 Found Sample Buffers =1 & Samples = 2
+Visual Info = 0X1770 Found Sample Buffers =1 & Samples = 2
+Visual Info = 0X1773 Found Sample Buffers =1 & Samples = 2
+Visual Info = 0X1651 Found Sample Buffers =1 & Samples = 4
+Visual Info = 0X1654 Found Sample Buffers =1 & Samples = 4
+Visual Info = 0X1771 Found Sample Buffers =1 & Samples = 4
+Visual Info = 0X1774 Found Sample Buffers =1 & Samples = 4
+Visual Info = 0X1652 Found Sample Buffers =1 & Samples = 8
+Visual Info = 0X1655 Found Sample Buffers =1 & Samples = 8
+Visual Info = 0X1772 Found Sample Buffers =1 & Samples = 8
+Visual Info = 0X1775 Found Sample Buffers =1 & Samples = 8
+Visual Info = 0X1617 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1619 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1737 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X1739 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X492 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X2085 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X2096 Found Sample Buffers =0 & Samples = 0
+Visual Info = 0X2097 Found Sample Buffers =0 & Samples = 0
+Visual Id of Best Visual Info is 0X1652 
+glXCreateContextAttribsARB Passed. Got the context of version 4.6
+Direct rendering / HW rendering is supported
+"./src/shaders/godrays/godrays.vs" : Vertex Shader Compilation Succeeded.
+"./src/shaders/godrays/godrays.fs" : Fragment Shader Compilation Succeeded.
+Shader Program Linking Succeeded.
+"./src/shaders/CommonShaders/color.vs" : Vertex Shader Compilation Succeeded.
+"./src/shaders/CommonShaders/color.fs" : Fragment Shader Compilation Succeeded.
+Shader Program Linking Succeeded.
+"./src/shaders/CommonShaders/color.vs" : Vertex Shader Compilation Succeeded.
+"./src/shaders/CommonShaders/color.fs" : Fragment Shader Compilation Succeeded.
+Shader Program Linking Succeeded.
+initialze() Succeeded
