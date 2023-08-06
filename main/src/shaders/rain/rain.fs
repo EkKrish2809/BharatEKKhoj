@@ -209,7 +209,7 @@ void main(void)
     // FragColor = sunLight;
     // FragColor = pointLight;
     // FragColor = texture(rainTex, fragmentTexCoords.xy) * sunLight  * vec4(lightFunc(), 1.0) * 0.7;// + pointLight;
-    FragColor = (texture(rainTex, fragmentTexCoords.xy)) * vec4(lightFunc(), 1.0);
+    FragColor = (texture(rainTex, fragmentTexCoords.xy)) * vec4(lightFunc() * 4, 1.0);
 
     //DEBUG ONLY
     // FragColor = vec4(fragmentTexCoords.z/10.0, fragmentTexCoords.z/10.0, fragmentTexCoords.z/10.0, 1);

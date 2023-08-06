@@ -89,6 +89,28 @@ public:
         right = vmath::normalize(vmath::cross(front, worldUp));
     }
 
+    void invertPitch()
+    {
+        updateInversCameraVectors();
+    }
+
+    void updateInversCameraVectors()
+    {
+        pitch = -pitch;
+        vmath::vec3 front_ = vmath::vec3(
+            cos(degToRad(yaw)) * cos(degToRad(pitch)),
+            sin(degToRad(pitch)),
+            sin(degToRad(yaw)) * cos(degToRad(pitch)));
+
+        front = vmath::normalize(front_);
+
+        right = vmath::normalize(vmath::cross(front, worldUp));
+        up = vmath::normalize(vmath::cross(right, front));
+
+        float distance = 2.0f * (position[1] - 0.0f);
+        position[1] -= distance;
+    }
+
     void updateResolution(float _width, float _height)
     {
         width = _width;
@@ -99,7 +121,7 @@ public:
     {
         // in
         // printf("KeyPressed: %c\n", keyPressed);
-        float velocity = movementSpeed * 0.5;
+        float velocity = movementSpeed * 8.5;
         if (keyPressed == 'W')
         {
             position = position + (front * velocity);
@@ -198,7 +220,7 @@ public:
         if (zoom > 10000.0f)
             zoom = 10000.0f;
 
-        perspectiveProjectionMatrix = vmath::perspective(45.0f + degToRad(zoom), (GLfloat)width / (GLfloat)height, 0.1f, 1000.0f);
+        perspectiveProjectionMatrix = vmath::perspective(45.0f + degToRad(zoom), (GLfloat)width / (GLfloat)height, 0.1f, 20000.0f);
 
         printf("Zoom = %f \n", zoom);
         

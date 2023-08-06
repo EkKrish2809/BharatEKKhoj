@@ -1,16 +1,19 @@
 #include "common.h"
 
-// Object
-float objX = 0.0;
-float objY = 0.0;
-float objZ = 0.0;
-float objIncrement = 1.0f;
+// // Object
+// float objX = 0.0;
+// float objY = 0.0;
+// float objZ = 0.0;
+// float objIncrement = 1.0f;
 
-// Scale
-float scaleX = 0.0;
-float scaleY = 0.0;
-float scaleZ = 0.0;
-float scaleIncrement = 0.01;
+// // Scale
+// float scaleX = 0.0;
+// float scaleY = 0.0;
+// float scaleZ = 0.0;
+// float scaleIncrement = 0.01;
+// timer
+
+
 
 mat4 matrixStack[MODEL_VIEW_MATRIX_STACK];
 int matrixStackTop = -1;

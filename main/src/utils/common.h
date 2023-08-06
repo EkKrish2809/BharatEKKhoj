@@ -5,6 +5,7 @@
 
 #include "GLHeadersAndMacros.h"
 #include "GLLog.h"
+#include "helper_timer.h"
 
 #include "../../includes/vmath.h"
 #include "../../includes/std_image.h"
@@ -12,6 +13,8 @@
 using namespace vmath;
 
 #define MODEL_VIEW_MATRIX_STACK 32
+
+
 
 extern float objX;
 extern float objY;
@@ -37,6 +40,8 @@ extern int giWindowHeight;
 
 extern mat4 matrixStack[MODEL_VIEW_MATRIX_STACK];
 extern int matrixStackTop;
+
+extern float ELAPSED_TIME;
 
 Bool LoadPNGImage(GLuint *texture, const char *imageFilePath);
 Bool LoadGlTexture(GLuint *texture, const char *path);

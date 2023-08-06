@@ -19,7 +19,7 @@ using std::string;
  * The shader contains an initial sphere positions and data required to calculate the sphere positions.
  * Each shader instance updates one sphere position, which is returned in the sphere_position output variable.
  */
-const char *spheres_updater_vert_shader = "#version 460\n"
+const char *spheres_updater_vert_shader = "#version 460 core\n"
                                           "\n"
                                           "/** Structure that describes parameters of a single sphere moving across the scalar field. */\n"
                                           "struct sphere_descriptor\n"
@@ -69,7 +69,7 @@ const char *spheres_updater_vert_shader = "#version 460\n"
  *  Dummy fragment shader for a program object to successfully link.
  *  Fragment shader is not used in this stage, but needed for a program object to successfully link.
  */
-const char *spheres_updater_frag_shader = "#version 460\n"
+const char *spheres_updater_frag_shader = "#version 460 core\n"
                                           "\n"
                                           "/** Shader entry point. */\n"
                                           "void main()\n"
@@ -81,7 +81,7 @@ const char *spheres_updater_frag_shader = "#version 460\n"
  * As input data we use sphere positions calculated in a previous stage and passed into the shader as
  * a uniform block.
  */
-const char *scalar_field_vert_shader = "#version 460\n"
+const char *scalar_field_vert_shader = "#version 460 core\n"
                                        "\n"
                                        "/** Precision to avoid division-by-zero errors. */\n"
                                        "#define EPSILON 0.000001f\n"
@@ -191,7 +191,7 @@ const char *scalar_field_vert_shader = "#version 460\n"
  *  Dummy fragment shader for a program object to successfully link.
  *  Fragment shader is not used in this stage, but needed for a program object to successfully link.
  */
-const char *scalar_field_frag_shader = "#version 460\n"
+const char *scalar_field_frag_shader = "#version 460 core\n"
                                        "\n"
                                        "/** Shader entry point. */\n"
                                        "void main()\n"
@@ -205,7 +205,7 @@ const char *scalar_field_frag_shader = "#version 460\n"
  * assign one of 256 possible types to each cell. The cell type data
  * for each cell is returned in cell_type_index output variable.
  */
-const char *marching_cubes_cells_vert_shader = "#version 460\n"
+const char *marching_cubes_cells_vert_shader = "#version 460 core\n"
                                                "\n"
                                                "/** Specify low precision for sampler3D type. */\n"
                                                "precision lowp sampler3D;\n"
@@ -326,7 +326,7 @@ const char *marching_cubes_cells_vert_shader = "#version 460\n"
  *  Dummy fragment shader for a program object to successfully link.
  *  Fragment shader is not used in this stage, but needed for a program object to successfully link.
  */
-const char *marching_cubes_cells_frag_shader = "#version 460\n"
+const char *marching_cubes_cells_frag_shader = "#version 460 core\n"
                                                "\n"
                                                "/** Shader entry point. */\n"
                                                "void main()\n"
@@ -343,7 +343,7 @@ const char *marching_cubes_cells_frag_shader = "#version 460\n"
  * it issues a vertex in any case, including a dummy triangles, but
  * the dummy triangles has all vertices set to point O and will not be rendered.
  */
-const char *marching_cubes_triangles_vert_shader = "#version 460\n"
+const char *marching_cubes_triangles_vert_shader = "#version 460 core\n"
                                                    "\n"
                                                    "precision highp isampler2D; /**< Specify high precision for isampler2D type. */\n"
                                                    "precision highp isampler3D; /**< Specify high precision for isampler3D type. */\n"
@@ -632,7 +632,7 @@ const char *marching_cubes_triangles_vert_shader = "#version 460\n"
                                                    "        /* [Stage 4 Calculate middle edge normal] */\n"
                                                    "\n"
                                                    "        /* Update vertex shader outputs. */\n"
-                                                   "        gl_Position                = mvp * vec4(edge_middle_vertex, 1.0);        /* Transform vertex position with MVP-matrix.        */\n"
+                                                   "        gl_Position                = projectionMatrix * viewMatrix * modelMatrix * vec4(edge_middle_vertex, 1.0);        /* Transform vertex position with MVP-matrix.        */\n"
                                                    "        phong_vertex_position      = gl_Position;                                /* Set vertex position for fragment shader.          */\n"
                                                    "        phong_vertex_normal_vector = vertex_normal;                              /* Set normal vector to surface for fragment shader. */\n"
                                                    "        phong_vertex_color         = vec3(0.7);                                  /* Set vertex color for fragment shader.             */\n"
@@ -654,7 +654,7 @@ const char *marching_cubes_triangles_vert_shader = "#version 460\n"
  * The shader uses one directional light source in Phong lighting model.
  * The light source moves on spherical surface around metaballs.
  */
-const char *marching_cubes_triangles_frag_shader = "#version 460\n"
+const char *marching_cubes_triangles_frag_shader = "#version 460 core\n"
                                                    "\n"
                                                    "/** Specify low precision for float type. */\n"
                                                    "precision lowp float;\n"
@@ -721,13 +721,13 @@ const char *marching_cubes_triangles_frag_shader = "#version 460\n"
                                                    "    }\n"
                                                    "\n"
                                                    "    /** Calculate fragment lighting as sum of previous three component. */\n"
-                                                    "    FragColor = vec4(ambient_lighting + diffuse_reflection + specular_reflection, 1.0);\n"
+                                                    "    /*FragColor = vec4(ambient_lighting + diffuse_reflection + specular_reflection, 1.0);*/\n"
                                                     "    FragColor = vec4(1.0 , 0.0, 0.0, 1.0);\n"
                                                    "}\n";
 
 /* General metaballs example properties. */
 GLfloat model_time = 0.0f;           /**< Time (in seconds), increased each rendering iteration.                                         */
-const GLuint tesselation_level = 32; /**< Level of details you would like to split model into. Please use values from th range [8..256]. */
+const GLuint tesselation_level = 96; /**< Level of details you would like to split model into. Please use values from th range [8..256]. */
 GLfloat isosurface_level = 12.0f;    /**< Scalar field's isosurface level.                                                               */
 unsigned int window_width = 256;     /**< Window width resolution (pixels).                                                              */
 unsigned int window_height = 256;    /**< Window height resolution (pixels).                                                             */
@@ -1183,8 +1183,8 @@ void calc_mvp(Matrix &mvp)
     float camera_distance = 2.5f;                                      /* Distance from camera to scene center.               */
 
     /* Matrix that stores temporary matrix data for translation transformations. */
-    Matrix mat4_translate = Matrix::createTranslation(-0.5, -0.5, -0.5 - 20.0 - objZ);
-    // printf("objZ = %f\n", objZ);
+    Matrix mat4_translate = Matrix::createTranslation(-0.5, -0.5, -0.5 );
+    PrintLog("objZ = %f\n", objZ);
 
     /* Matrix that stores temporary matrix data for scale transformations. */
     Matrix mat4_scale = Matrix::createScaling(2.0, 2.0, 2.0);
@@ -1470,28 +1470,34 @@ void setupGraphics(int width, int height)
     glBindVertexArray(marching_cubes_triangles_vao_id);
 
     /* Enable facet culling, depth testing and specify front face for polygons. */
-    /*glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glFrontFace(GL_CW));/
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_CULL_FACE);
+    // glFrontFace(GL_CW);
 
     /* Start counting time. */
 }
 
 /** Draws one frame. */
-void renderFrame(void)
+void renderFrame(float currTime)
 {
-    // glUseProgram(marching_cubes_triangles_program_id);
+    pushMatrix(modelMatrix);
+    {
+    glUseProgram(marching_cubes_triangles_program_id);
 
-    // glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "modelMatrix"), 1, GL_FALSE, modelMatrix);
-    // glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "viewMatrix"), 1, GL_FALSE, viewMatrix);
-    // glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "projectionMatrix"), 1, GL_FALSE, perspectiveProjectionMatrix);
-    // glUseProgram(0);
+    modelMatrix = vmath::translate(0.0f, 0.0f, -6.0f);
 
+    glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "modelMatrix"), 1, GL_FALSE, modelMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "viewMatrix"), 1, GL_FALSE, viewMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "projectionMatrix"), 1, GL_FALSE, perspectiveProjectionMatrix);
+    glUseProgram(0);
+    }
+    modelMatrix = popMatrix();
 
 
     /* Update time. */
-    model_time = ELAPSED_TIME;
-    calc_mvp(mvp);
+    // model_time += 0.1f;
+    model_time = currTime;
+    // calc_mvp(mvp);
     /*
      * Rendering section
      */
@@ -1514,6 +1520,8 @@ void renderFrame(void)
     glEnable(GL_RASTERIZER_DISCARD);
     /* [Stage 1 Enable GL_RASTERIZER_DISCARD] */
     {
+        pushMatrix(modelMatrix);
+        {
         /* Select program for sphere positions generation stage. */
         glUseProgram(spheres_updater_program_id);
 
@@ -1535,6 +1543,9 @@ void renderFrame(void)
         /* [Stage 1 Deactivate transform feedback mode] */
         glEndTransformFeedback();
         /* [Stage 1 Deactivate transform feedback mode] */
+        glUseProgram(0);
+        }
+        modelMatrix = popMatrix();
     }
     /* [Stage 1 Disable GL_RASTERIZER_DISCARD] */
     glDisable(GL_RASTERIZER_DISCARD);
@@ -1559,6 +1570,8 @@ void renderFrame(void)
     /* Shorten GL pipeline: we will use vertex shader only. */
     glEnable(GL_RASTERIZER_DISCARD);
     {
+        pushMatrix(modelMatrix);
+        {
         /* Select program for scalar field generation stage. */
         glUseProgram(scalar_field_program_id);
 
@@ -1569,6 +1582,9 @@ void renderFrame(void)
             glDrawArrays(GL_POINTS, 0, samples_in_3d_space);
         }
         glEndTransformFeedback();
+        glUseProgram(0);
+        }
+        modelMatrix = popMatrix();
     }
     glDisable(GL_RASTERIZER_DISCARD);
 
@@ -1609,6 +1625,8 @@ void renderFrame(void)
     /* Shorten GL pipeline: we will use vertex shader only. */
     glEnable(GL_RASTERIZER_DISCARD);
     {
+        pushMatrix(modelMatrix);
+        {
         /* Select program for Marching Cubes algorthim's cell splitting stage. */
         glUseProgram(marching_cubes_cells_program_id);
 
@@ -1621,6 +1639,10 @@ void renderFrame(void)
             /* [Stage 3 Execute vertex shader] */
         }
         glEndTransformFeedback();
+
+        glUseProgram(0);
+        }
+        modelMatrix = popMatrix();
     }
     glDisable(GL_RASTERIZER_DISCARD);
 
@@ -1655,13 +1677,14 @@ void renderFrame(void)
     glActiveTexture(GL_TEXTURE0);
 
     /* Activate triangle generating and rendering program. */
-
+    pushMatrix(modelMatrix);
+    {
     glUseProgram(marching_cubes_triangles_program_id);
-    glUniformMatrix4fv(marching_cubes_triangles_uniform_mvp_id, 1, GL_FALSE, mvp.getAsArray());
-/*
-    glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "modelMatrix"), 1, GL_FALSE, modelMatrix);
-    glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "viewMatrix"), 1, GL_FALSE, viewMatrix);
-    glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "projectionMatrix"), 1, GL_FALSE, perspectiveProjectionMatrix);*/
+    // glUniformMatrix4fv(marching_cubes_triangles_uniform_mvp_id, 1, GL_FALSE, mvp.getAsArray());
+
+    // glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "modelMatrix"), 1, GL_FALSE, modelMatrix);
+    // glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "viewMatrix"), 1, GL_FALSE, viewMatrix);
+    // glUniformMatrix4fv(glGetUniformLocation(marching_cubes_triangles_program_id, "projectionMatrix"), 1, GL_FALSE, perspectiveProjectionMatrix);
 
 
     /* Specify input arguments to vertex shader. */
@@ -1672,6 +1695,13 @@ void renderFrame(void)
     glDrawArrays(GL_TRIANGLES, 0, cells_in_3d_space * triangles_per_cell * vertices_per_triangle);
     /* [Stage 4 Run triangle generating and rendering program] */
     glBindVertexArray(0);
+    }
+    modelMatrix = popMatrix();
+}
+
+void updateMetaball(void)
+{
+    // model_time += 0.2f;
 }
 
 /** Deinitialises OpenGL ES environment. */

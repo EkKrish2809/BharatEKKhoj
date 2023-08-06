@@ -1,12 +1,13 @@
 #version 460 core
 
-in vec2 a_texcoord_out;
+uniform sampler2D ParticleTex;
 
-uniform vec2 res;
-uniform sampler2D texture;
+in float Transp;
 
-void main() {
-    vec2 pixel = gl_FragCoord.xy / res.xy;
-    gl_FragColor = texture2D( tex, pixel );//This is the color of the current pixel 
-    gl_FragColor.r += 0.01;//Increment the red component 
- }
+layout ( location = 0 ) out vec4 FragColor;
+
+void main()
+{
+    FragColor = texture(ParticleTex, gl_PointCoord);
+    FragColor.a *= Transp;
+}

@@ -22,7 +22,7 @@ public:
     GLuint fireSamplerUniform_fire, noiseSamplerUniform_fire, alphaSamplerUniform_fire;
     GLuint frameTimeUniform_fire, scrollSpeedUniform_fire, scaleUniform_fire, distortion1Uniform_fire, distortion2Uniform_fire, distortion3Uniform_fire, distortionScaleUniform_fire, distortionBiasUniform_fire;
 
-    GLuint texture_fire, texture_noise_fire, texture_alpha_fire;
+    GLuint texture_fire = 0, texture_noise_fire = 0, texture_alpha_fire = 0;
 
     // Fire Texture Uniforms
     float frameTime = 0.0f;
@@ -115,25 +115,24 @@ public:
         // Unbinding of vao_fire
         glBindVertexArray(0);
         // --------------------------------------------------------------------------------------------------
-
-        if (LoadPNGImage(&texture_fire, "./assets/textures/fire/fire.png") == False)
+        
+        texture_fire = loadDDSTexture_Fire("./assets/textures/fire/fire.dds", texture_fire, ddsImage_fire, true);
+        if (texture_fire == 0)
         {
-            printf("\nFailed To Load DDS Texture : Fire !!! \n");
             PrintLog("\nFailed To Load DDS Texture : Fire !!! \n");
             return False;
         }
 
-        
-        if (LoadPNGImage(&texture_noise_fire, "./assets/textures/fire/noise.png") == False)
+        texture_noise_fire = loadDDSTexture_Fire("./assets/textures/fire/noise.dds", texture_noise_fire, ddsImage_fire, false);
+        if (texture_noise_fire == 0)
         {
-            printf("\nFailed To Load DDS Texture : Noise !!! \n");
             PrintLog("\nFailed To Load DDS Texture : Noise !!! \n");
             return False;
         }
         
-        if (LoadPNGImage(&texture_alpha_fire, "./assets/textures/fire/alpha.png") == False)
+        texture_alpha_fire = loadDDSTexture_Fire("./assets/textures/fire/alpha.dds", texture_alpha_fire, ddsImage_fire, true);
+        if (texture_alpha_fire == 0)
         {
-            printf("\nFailed To Load DDS Texture : Alpha !!! \n");
             PrintLog("\nFailed To Load DDS Texture : Alpha !!! \n");
             return False;
         }
@@ -144,34 +143,37 @@ public:
             glEnable(GL_TEXTURE_2D);
         }
 
-        if (glIsEnabled(GL_BLEND) == GL_FALSE)
-        {
-            // Enable Blending
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        }
+        // if (glIsEnabled(GL_BLEND) == GL_FALSE)
+        // {
+        //     // Enable Blending
+        //     glEnable(GL_BLEND);
+        //     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // }
 
         return True;
 
     }
 
-    void renderFire(void)
+    void renderFire(double currTime)
     {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         glUseProgram(shaderProgramObject_fire);
 
         // Transformations
-        mat4 translationMatrix = mat4::identity();
+        // mat4 translationMatrix = mat4::identity();
 
-        translationMatrix = vmath::translate(0.0f, 0.0f, 4.0f);
+        // translationMatrix = vmath::translate(0.0f, 0.0f, 4.0f);
 
-        modelMatrix = modelMatrix * translationMatrix;
+        // modelMatrix = modelMatrix * translationMatrix;
 
         glUniformMatrix4fv(modelMatrixUniform_fire, 1, GL_FALSE, modelMatrix);
         glUniformMatrix4fv(viewMatrixUniform_fire, 1, GL_FALSE, viewMatrix);
         glUniformMatrix4fv(projectionMatrixUniform_fire, 1, GL_FALSE, perspectiveProjectionMatrix);
 
         // Fire Uniforms
-        glUniform1f(frameTimeUniform_fire, frameTime);
+        glUniform1f(frameTimeUniform_fire, currTime);
         glUniform3fv(scrollSpeedUniform_fire, 1, scrollSpeeds);
         glUniform3fv(scaleUniform_fire, 1, scales);
         glUniform2fv(distortion1Uniform_fire, 1, distortion1);
@@ -207,6 +209,8 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glUseProgram(0);
+
+        glDisable(GL_BLEND);
     }
 
     void updateFire(void)

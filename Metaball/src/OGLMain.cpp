@@ -43,6 +43,8 @@ using namespace vmath;
 void toggleFullscreen(void);
 
 
+BharatEkKhoj *bharatEkKhoj = NULL;
+
 vec3 eye = vec3(0.0f, 0.0f, 6.0f);
 vec3 center = vec3(0.0f, 0.0f, 0.0f);
 vec3 up = vec3(0.0f, 1.0f, 0.0f);
@@ -79,6 +81,10 @@ GLXContext glxContext;
 Bool bActiveWindow = False;
 GLuint shaderProgramObject;
 
+// timer 
+StopWatchInterface *timer = NULL;
+float ELAPSED_TIME = 0.0f;
+
 // Camera
 Camera camera;
 BezierCamera bezierCamera;
@@ -86,14 +92,13 @@ BezierCamera bezierCamera;
 // global resolution
 int giWindowWidth, giWindowHeight;
 
-BharatEkKhoj *bharatEkKhoj = NULL;
+
+
 
 bool USE_FPV_CAM = false;
 int scrollDelta = 0;
 
-// timer 
-StopWatchInterface *timer = NULL;
-float ELAPSED_TIME = 0.0f;
+
 
 // EntryPoint Function
 int main(void)
@@ -350,6 +355,11 @@ int main(void)
 					else
 						USE_FPV_CAM = true;
 					break;
+				// case 'C':
+				// 	USE_FPV_CAM = true;
+				// 	break;
+				default:
+					break;
 
 				}
 				break;
@@ -517,14 +527,6 @@ int initialize(void)
     }
 
 	// printGLInfo();
-    
-	// Initialize ThisIsJustABeginning
-	bharatEkKhoj = new BharatEkKhoj();
-	if (bharatEkKhoj->initialize() == false)
-	{
-		return -2;
-	}
-
 
     // Depth related changes
     glClearDepth(1.0f);
@@ -551,6 +553,12 @@ int initialize(void)
 	// timer
 	sdkCreateTimer(&timer);
 	sdkStartTimer(&timer);
+
+	bharatEkKhoj = new BharatEkKhoj();
+	if (bharatEkKhoj->initialize() == false)
+	{
+		return -2;
+	}
 
     // Warmup resize
     resize(WIN_WIDTH, WIN_HEIGHT);
@@ -585,37 +593,41 @@ void draw(void)
     // Code
 	ELAPSED_TIME = sdkGetTimerValue(&timer);
 	ELAPSED_TIME = ELAPSED_TIME / 1000.0f;
-
+	
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Setting up bezierCamera points
-	// vector<vector<float>> bezierPoints = {
-	// 	{0.0f, 0.0f, 50.0f},
-	// 	{-12.0f, 0.0f, 20.0f},
-	// 	{20.0f, 0.0f, 10.0f},
-	// 	{30.0f, 0.0f, -10.0f},
-	// 	{0.0f, 0.0f, -10.0f},
-	// 	};
+	vector<vector<float>> bezierPoints = {
+		{0.0f, 0.0f, 50.0f},
+		{-12.0f, 0.0f, 20.0f},
+		{20.0f, 0.0f, 10.0f},
+		{30.0f, 0.0f, -10.0f},
+		{0.0f, 0.0f, -10.0f},
+		};
 
-	// vector<float> yawPoints = {-90.0f, -110.0f, -130.0f, -180.0f, -270.0f};
-	// vector<float> pitchPoints = {0.0f, 10.0f, 0.0f, -10.0f};
-	// bezierCamera.setBezierPoints(bezierPoints, yawPoints, pitchPoints);
-	// bezierCamera.update();
+	vector<float> yawPoints = {-90.0f, -110.0f, -130.0f, -180.0f, -270.0f};
+	vector<float> pitchPoints = {0.0f, 10.0f, 0.0f, -10.0f};
+	bezierCamera.setBezierPoints(bezierPoints, yawPoints, pitchPoints);
+	bezierCamera.update();
 
+	
 	if (USE_FPV_CAM)
 		viewMatrix = camera.getViewMatrix();
 	else
-		// viewMatrix = bezierCamera.getViewMatrix();
+		viewMatrix = bezierCamera.getViewMatrix();
 
+	// printf("Elapsed Time 11 : %f\n", ELAPSED_TIME);
+	float time = ELAPSED_TIME;
 	pushMatrix(modelMatrix);
 	{
-		// bezierCamera.displayBezierCurve();
+		bezierCamera.displayBezierCurve();
 	}
 	modelMatrix = popMatrix();
 
     pushMatrix(modelMatrix);
 	{
-		bharatEkKhoj->display();
+		printf("Elapsed Time : %f\n", time);
+		bharatEkKhoj->display(time);
 	}
 	modelMatrix = popMatrix();
 
@@ -628,9 +640,9 @@ void update(void)
 {
 	// code
 	// Update bezierCamera time
-	// if (bezierCamera.time < 1.0)
+	if (bezierCamera.time < 1.0)
 	{
-		// bezierCamera.time += 0.0001f;
+		bezierCamera.time += 0.0001f;
 	}
 
 	bharatEkKhoj->update();
@@ -639,7 +651,7 @@ void update(void)
 void uninitialize(void)
 {
     // Deletion and uninitialization of VBO
-	// CloseLogFile();
+	CloseLogFile();
 
 	bharatEkKhoj->uninitialize();
 

@@ -84,10 +84,10 @@ public:
     GLuint vbo_quad_texcoord;
 
     // for light
-    GLfloat lightAmbient[4] = {0.1f, 0.1f, 0.1f, 1.0f};
+    GLfloat lightAmbient[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     GLfloat lightDiffuse[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     GLfloat lightSpecular[4] = {1.0f, 1.0f, 1.0f, 1.0f} ;
-    GLfloat lightPosition[4] = {100.0f, 100.0f, 100.0f, 1.0f};
+    GLfloat lightPosition[4] = {0.0f, 100.0f, -50.0f, 1.0f};
     GLfloat materialAmbient[4] = {0.0f, 0.0f, 0.0f ,1.0f};
     GLfloat materialDiffuse[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     GLfloat materialSpecular[4] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -445,9 +445,9 @@ public:
         //     return FALSE;
         // }
 
-        sdkCreateTimer(&timer);
+        // sdkCreateTimer(&timer);
 
-        sdkStartTimer(&timer);
+        // sdkStartTimer(&timer);
 
         return True;
 
@@ -549,148 +549,6 @@ public:
         // dt = 0.001f * deltaTime;
         glFinish();
 
-    /*    if (onGPU)
-        {
-            // OpenCL Related Code
-
-            // Step-1: Set OpenCL Kernel Parameters
-            // --------------------------------------------------------------------------------
-            // Step-1.1: Passing 0th Parameter
-            oclResult = clSetKernelArg(oclKernel, 0, sizeof(cl_mem), (void *)&graphicsResource[0]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 0th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            oclResult = clSetKernelArg(oclKernel, 1, sizeof(cl_mem), (void *)&graphicsResource[1]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 1st Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            oclResult = clSetKernelArg(oclKernel, 2, sizeof(cl_mem), (void *)&graphicsResource[2]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 2nd Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.2: Passing 3rd Parameter
-            oclResult = clSetKernelArg(oclKernel, 3, sizeof(int), &maxParticles);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 3rd Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.3: Passing 4th Parameter
-            oclResult = clSetKernelArg(oclKernel, 4, sizeof(float), &dt);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 4th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.4: Passing 5th Parameter
-            oclResult = clSetKernelArg(oclKernel, 5, sizeof(float), &eyePos[0]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 5th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.4: Passing 6th Parameter
-            oclResult = clSetKernelArg(oclKernel, 6, sizeof(float), &eyePos[1]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 6th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.4: Passing 7th Parameter
-            oclResult = clSetKernelArg(oclKernel, 7, sizeof(float), &eyePos[2]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 7th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.4: Passing 8th Parameter
-            oclResult = clSetKernelArg(oclKernel, 8, sizeof(float), &winDir[windPtr]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 8th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-1.4: Passing 9th Parameter
-            oclResult = clSetKernelArg(oclKernel, 9, sizeof(float), &winDir[windPtr+2]);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clSetKernelArg() Failed For 9th Parameter : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-            // --------------------------------------------------------------------------------
-
-            // Step-2: Enqueue graphicsResource into the command queue
-            oclResult = clEnqueueAcquireGLObjects(oclCommandQueue, 3, graphicsResource, 0, NULL, NULL);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clEnqueueAcquireGLObjects() Failed : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-3: Run the OpenCL Kernel
-            globalWorkSize[0] = maxParticles;
-            // globalWorkSize[1] = mesh_height;
-
-            oclResult = clEnqueueNDRangeKernel(oclCommandQueue, oclKernel, 1, NULL, globalWorkSize, NULL, NULL, NULL, NULL);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clEnqueueNDRangeKernel() Failed : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-4: Release graphicsResource
-            oclResult = clEnqueueReleaseGLObjects(oclCommandQueue, 3, graphicsResource, 0, NULL, NULL);
-            if (oclResult != CL_SUCCESS)
-            {
-                PrintLog("OpenCL API Error - clEnqueueReleaseGLObjects() Failed : %d !!!\n", oclResult);
-                uninitialize();
-                exit(EXIT_FAILURE);
-            }
-
-            // Step-5: Finish OpenCL Command Queue
-            clFinish(oclCommandQueue);
-
-            // Step-6: GPU VBO Related Code
-            // glBindBuffer(GL_ARRAY_BUFFER, vbo_gpu_position);
-            // glBindBuffer(GL_ARRAY_BUFFER, vbo_gpu_seed);
-            // glBindBuffer(GL_ARRAY_BUFFER, vbo_gpu_velocity);
-        }
-    */         // else
-        // {
-        //     // CPU Related Code
-        //     sineWave(mesh_width, mesh_height, animation_time);
-
-        //     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        //     glBufferData(GL_ARRAY_BUFFER, MY_ARRAY_SIZE * sizeof(float), position, GL_DYNAMIC_DRAW);
-        // }
-
         if (windPtr < sizeof(winDir) - 1)
         {
             windPtr++;
@@ -702,19 +560,20 @@ public:
 
     }
 
-    void display(void)
+    void display(float current_time)
     {
         pushMatrix(modelMatrix);
         {
-            display_rain();
+            display_rain(current_time);
         }
         modelMatrix = popMatrix();
     }
 
-    void display_rain(void)
+    void display_rain(float current_time)
     {
         // Variable Declarations
-        float elapsedTime = sdkGetTimerValue(&timer) / 1000.0f;
+        // float elapsedTime = sdkGetTimerValue(&timer) / 1000.0f;
+        float elapsedTime = current_time;
 
         createRainData();
         
@@ -728,14 +587,15 @@ public:
 
         glUniform3fv(rainShader->eyePosUniform, 1, camera.getEye());
         glUniform3fv(rainShader->windDirUniform, 1, winDir[windPtr]);
-        // glUniform3fv(rainShader->windDirUniform, 1, vec3(objX, objY, objZ));
+        // glUniform3fv(rainShader->windDirUniform, 1, vec3(8.0f, 0.0f, 0.0f));
         glUniform1f(rainShader->dtUniform, dt);
 
         // FOR LIGHT
         glUniform3fv(rainShader->laUniform, 1, lightAmbient);
 		glUniform3fv(rainShader->ldUniform, 1, lightDiffuse);
 		glUniform3fv(rainShader->lsUniform, 1, lightSpecular);
-		glUniform4fv(rainShader->lightPositionUniform, 1, vec4(objX, objY, objZ, 1.0f));
+		glUniform4fv(rainShader->lightPositionUniform, 1, vec4(0.0f, 0.0f, -631.160034f, 1.0f));
+		// glUniform4fv(rainShader->lightPositionUniform, 1, lightPosition);
 
 		glUniform3fv(rainShader->kaUniform, 1, materialAmbient);
 		glUniform3fv(rainShader->kdUniform, 1, materialDiffuse);
@@ -791,6 +651,7 @@ public:
         dt = 1e-3f * elapsedTime;
         // dt = 0.00001f * elapsedTime;
         // updateSimulation(animation_time);
+        // printf("ELAPSED TIME RAIN = %f\n", ELAPSED_TIME);
     }
 
     void display1(void)
@@ -831,12 +692,12 @@ public:
     
     void uninitialize(void)
     {
-         if (timer)
-        {
-            sdkStopTimer(&timer);
-            sdkDeleteTimer(&timer);
-            timer = NULL;
-        }
+        //  if (timer)
+        // {
+        //     sdkStopTimer(&timer);
+        //     sdkDeleteTimer(&timer);
+        //     timer = NULL;
+        // }
 
         // if (oclKernel)
         // {

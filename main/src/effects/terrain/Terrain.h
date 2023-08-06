@@ -24,18 +24,26 @@ public:
 
     GLuint heightMapSamplerUniform;
     GLuint terrainTextureUniform;
+    GLuint terrainClipPlaneUniform;
+
+    // For normal mapping
+    GLuint lightPosUniform;
+    GLuint viewPosUniform;
+    GLuint normalMapSamplerUniform;
 
     GLuint terrainVAO, terrainVBO;
 
-    GLuint texture_heightmap;
+    GLuint texture_heightmap, texture_heightmap2;
     unsigned char *imageData = NULL;
     int numImageComponents = 0;
-    GLuint texture_ground;
+    GLuint texture_ground1, texture_ground2;
     int width, height;
     std::vector<float> vertices;
 
     float *posArray = NULL;
     float *texArray = NULL;
+
+    // float lightPos[3] = {0.5f, 1.0f, 0.3f};
 
     Bool initialize(void)
     {
@@ -76,13 +84,26 @@ public:
         viewMatrixUniform = glGetUniformLocation(shaderProgramObject, "u_viewMatrix");
         modelMatrixUniform = glGetUniformLocation(shaderProgramObject, "u_modelMatrix");
 
+        terrainClipPlaneUniform = glGetUniformLocation(shaderProgramObject, "u_plane");
         heightMapSamplerUniform = glGetUniformLocation(shaderProgramObject, "heightMap");
         terrainTextureUniform = glGetUniformLocation(shaderProgramObject, "terrainTex");
+
+        // lightPosUniform = glGetUniformLocation(shaderProgramObject, "lightPos");
+        // viewPosUniform = glGetUniformLocation(shaderProgramObject, "viewPos");
+        // normalMapSamplerUniform = glGetUniformLocation(shaderProgramObject, "normalMap");
 
         printf("Uniform locations\n");
 
         // loading texture for terrain
-        if (LoadGlTexture(&texture_ground, "./assets/textures/rock_06_diff_4k.jpg") == False)
+        if (LoadGlTexture(&texture_ground2, "./assets/textures/rock_06_diff_4k.jpg") == False)
+        {
+            printf("Failed to load terrain texture\n");
+            return False;
+        }
+        printf("Terrain texture\n");
+
+        // loading texture for terrain
+        if (LoadGlTexture(&texture_ground1, "./assets/textures/terrain/lava.jpg") == False)
         {
             printf("Failed to load terrain texture\n");
             return False;
@@ -96,6 +117,12 @@ public:
             printf("Failed to load heightMap\n");
             return False;
         }
+        if (loadHeightMap(&texture_heightmap2, "./assets/textures/newHieghtMap.bmp") == False)
+        {
+            PrintLog("Failed to load heightMap\n");
+            printf("Failed to load heightMap\n");
+            return False;
+        }
         printf("terrain heightmap\n");
         printf("HeightMap::width = %f\theight = %f\n", (float)width, (float)height);
 
@@ -103,7 +130,7 @@ public:
         // ------------------------------------------------------------------
         // std::vector<float> vertices;
 
-           unsigned int rez = 20;
+           unsigned int rez = 35;
             for(unsigned int i = 0; i <= rez-1; i++)
             {
                 for(unsigned int j = 0; j <= rez-1; j++)
@@ -136,25 +163,65 @@ public:
             std::cout << "Loaded " << rez*rez << " patches of 4 control points each" << std::endl;
             std::cout << "Processing " << rez*rez*4 << " vertices in vertex shader" << std::endl;
         
+        // Calculating normals
+        // for (int i = 0; i < vertices.size(); i++)
+        {
+            // positions
+            // vec3 pos1(vertices[i],  vertices[i+1], vertices[i+2]);
+            // vec2 uv1(vertices[i+3], vertices[i+4]);
+            // vec3 pos2(vertices[i+5],  vertices[i+6], vertices[i+7]);
+            // vec2 uv2(vertices[i+8], vertices[i+9]);
+            // vec3 pos3( vertices[i+10],  vertices[i+11], vertices[i+12]);
+            // vec2 uv3(vertices[i+13], vertices[i+14]);  
+            // vec3 pos4(vertices[i+15],  vertices[i+16], vertices[i+17]);
+            // vec2 uv4(vertices[i+18], vertices[i+19]);
+            // texture coordinates
+            
+            
+            
+            
+            // normal vector
+            // vec3 nm(0.0f, 0.0f, 1.0f);
 
-        // vertex generation
-        // // std::vector<float> vertices;
-        // float yScale = 64.0f / 256.0f, yShift = 16.0f; // apply a scale+shift to the height data
-        // for (unsigned int i = 0; i < height; i++)
-        // {
-        //     for (unsigned int j = 0; j < width; j++)
-        //     {
-        //         // retrieve texel for (i,j) tex coord
-        //         unsigned char *texel = imageData + (j + width * i) * numImageComponents;
-        //         // raw height at coordinate
-        //         unsigned char y = texel[0];
+            // // calculate tangent/bitangent vectors of both triangles
+            // vec3 tangent1, bitangent1;
+            // vec3 tangent2, bitangent2;
+            // // triangle 1
+            // // ----------
+            // vec3 edge1 = pos1 - pos3;
+            // vec3 edge2 = pos2 - pos3;
+            // vec2 deltaUV1 = uv1 - uv3;
+            // vec2 deltaUV2 = uv2 - uv3;
 
-        //         // vertex
-        //         vertices.push_back(-height / 2.0f + i);       // v.x
-        //         vertices.push_back((int)y * yScale - yShift); // v.y
-        //         vertices.push_back(-width / 2.0f + j );      // v.z
-        //     }
-        // }
+            // float f = 1.0f / (deltaUV1[0] * deltaUV2[1] - deltaUV2[0] * deltaUV1[1]);
+
+            // tangent1.x = f * (deltaUV2[1] * edge1[0] - deltaUV1[1] * edge2[0]);
+            // tangent1.y = f * (deltaUV2[1] * edge1[1] - deltaUV1[1] * edge2[1]);
+            // tangent1.z = f * (deltaUV2[1] * edge1[2] - deltaUV1[1] * edge2[2]);
+
+            // bitangent1.x = f * (-deltaUV2[0] * edge1[0] + deltaUV1[0] * edge2[0]);
+            // bitangent1.y = f * (-deltaUV2[0] * edge1[1] + deltaUV1[0] * edge2[1]);
+            // bitangent1.z = f * (-deltaUV2[0] * edge1[2] + deltaUV1[0] * edge2[2]);
+
+            // triangle 2
+            // ----------
+            // edge1 = pos2 - pos3;
+            // edge2 = pos4 - pos3;
+            // deltaUV1 = uv2 - uv3;
+            // deltaUV2 = uv4 - uv3;
+
+            // f = 1.0f / (deltaUV1[0] * deltaUV2[1] - deltaUV2[0] * deltaUV1[1]);
+
+            // tangent2.x = f * (deltaUV2[1] * edge1[0] - deltaUV1[1] * edge2[0]);
+            // tangent2.y = f * (deltaUV2[1] * edge1[1] - deltaUV1[1] * edge2[1]);
+            // tangent2.z = f * (deltaUV2[1] * edge1[2] - deltaUV1[1] * edge2[2]);
+
+
+            // bitangent2.x = f * (-deltaUV2[0] * edge1[0] + deltaUV1[0] * edge2[0]);
+            // bitangent2.y = f * (-deltaUV2[0] * edge1[1] + deltaUV1[0] * edge2[1]);
+            // bitangent2.z = f * (-deltaUV2[0] * edge1[2] + deltaUV1[0] * edge2[2]);
+
+        }
 
         // printing vertices
         // PrintLog("x = %f	y = %f	z = %f\n",vertices[0], vertices[1], vertices[3]);
@@ -274,7 +341,7 @@ public:
     {
     }
 
-    void display(void)
+    void display(int scene)
     {
         // code
         glUseProgram(shaderProgramObject);
@@ -282,18 +349,41 @@ public:
         glUniformMatrix4fv(viewMatrixUniform, 1, GL_FALSE, viewMatrix);
         glUniformMatrix4fv(projectionMatrixUniform, 1, GL_FALSE, perspectiveProjectionMatrix);
 
-        glActiveTexture(GL_TEXTURE0);
-        glUniform1i(heightMapSamplerUniform, 0);
-        glBindTexture(GL_TEXTURE_2D, texture_heightmap);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glUniform1i(terrainTextureUniform, 1);
-        glBindTexture(GL_TEXTURE_2D, texture_ground);
+        GLfloat eqn[] = {0.0f, 1.0f, 0.0f, 1.5f};
 
+        if (scene == 1)
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glUniform1i(heightMapSamplerUniform, 0);
+            glBindTexture(GL_TEXTURE_2D, texture_heightmap);
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, texture_ground1);
+            glUniform1i(terrainTextureUniform, 1);
+        }
+        else
+        {
+            glEnable(GL_CLIP_PLANE0);
+
+            glActiveTexture(GL_TEXTURE0);
+            glUniform1i(heightMapSamplerUniform, 0);
+            glBindTexture(GL_TEXTURE_2D, texture_heightmap2);
+
+            // glUniform4fv(terrainClipPlaneUniform, 1, eqn);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, texture_ground2);
+            glUniform1i(terrainTextureUniform, 1);
+        }
         // render the terrain
         glBindVertexArray(terrainVAO);
-        glDrawArrays(GL_PATCHES, 0, NUM_PATCH_PTS * 20 * 20);
+        glDrawArrays(GL_PATCHES, 0, NUM_PATCH_PTS * 35 * 35);
         glBindVertexArray(0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         glUseProgram(0);
     }

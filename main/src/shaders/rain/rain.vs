@@ -19,5 +19,5 @@ void main(void)
     // random enlight value in w component of velocity
     velocity = vertexVelo;
     gl_Position = positionMC;
-    //gl_PointSize = 10.0;
+    gl_PointSize = 10.0;
 }

@@ -5,11 +5,21 @@ uniform sampler2D heightMap;
 uniform mat4 u_modelMatrix;
 uniform mat4 u_viewMatrix;
 uniform mat4 u_projectionMatrix;
+uniform vec4 u_plane;
 
 in vec2 TextureCoord[];
+// in vec3 FragPos_out[];
+// in vec3 TangentLightPos_out[];
+// in vec3 TangentViewPos_out[];
+// in vec3 TangentFragPos_out[];
 
 out float Height;
 out vec2 a_texcoord_tes_out;
+
+// out vec3 frag_pos_out;
+// out vec3 tangent_lightpos_out;
+// out vec3 tangent_viewpos_out;
+// out vec3 tangent_fragpos_out;
 
 void main()
 {
@@ -31,6 +41,12 @@ void main()
 
     Height = texture(heightMap, texCoord).y * 64.0 - 16.0;
 
+    // light pos conversion
+
+    // view pos conversion
+
+    // frag pos conversion
+
     vec4 p00 = gl_in[0].gl_Position;
     vec4 p01 = gl_in[1].gl_Position;
     vec4 p10 = gl_in[2].gl_Position;
@@ -45,4 +61,5 @@ void main()
     vec4 p = (p1 - p0) * v + p0 + normal * Height;
 
     gl_Position = u_projectionMatrix * u_viewMatrix * u_modelMatrix * p;
+    gl_ClipDistance[0] = dot(u_modelMatrix * p, u_plane);
 }

@@ -6,19 +6,32 @@ uniform mat4 u_modelMatrix;
 uniform mat4 u_viewMatrix;
 
 in vec2 a_texCoord_out[];
+// in vec3 FragPos[];
+// in vec3 TangentLightPos[];
+// in vec3 TangentViewPos[];
+// in vec3 TangentFragPos[];
+
 out vec2 TextureCoord[];
+// out vec3 FragPos_out[];
+// out vec3 TangentLightPos_out[];
+// out vec3 TangentViewPos_out[];
+// out vec3 TangentFragPos_out[];
 
 void main()
 {
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
     TextureCoord[gl_InvocationID] = a_texCoord_out[gl_InvocationID];
+    // FragPos_out[gl_InvocationID] = FragPos[gl_InvocationID];
+    // TangentLightPos_out[gl_InvocationID] = TangentLightPos[gl_InvocationID];
+    // TangentViewPos_out[gl_InvocationID] = TangentViewPos[gl_InvocationID];
+    // TangentFragPos_out[gl_InvocationID] = TangentFragPos[gl_InvocationID];
 
     if(gl_InvocationID == 0)
     {
-        const int MIN_TESS_LEVEL = 4;
-        const int MAX_TESS_LEVEL = 64;
-        const float MIN_DISTANCE = 20;
-        const float MAX_DISTANCE = 800;
+        const int MIN_TESS_LEVEL = 4 * 2;
+        const int MAX_TESS_LEVEL = 64 *2;
+        const float MIN_DISTANCE = 20 * 2;
+        const float MAX_DISTANCE = 800 * 2;
 
         vec4 eyeSpacePos00 = u_viewMatrix * u_modelMatrix * gl_in[0].gl_Position;
         vec4 eyeSpacePos01 = u_viewMatrix * u_modelMatrix * gl_in[1].gl_Position;

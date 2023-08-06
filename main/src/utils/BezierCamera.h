@@ -140,6 +140,42 @@ public:
         position[2] = deCasteljau(time, extractColumn(bezierPoints, 2));
     }
 
+    void invertPitch()
+    {
+        updateInversCameraVectors();
+    }
+
+    void updateInversCameraVectors()
+    {
+        // Calculating yaw and pitch
+        yaw = deCasteljau(time, yawPoints);
+        pitch = deCasteljau(time, pitchPoints);
+        pitch = -pitch;
+
+        // updating center [ YAW & PITCH ]
+        vmath::vec3 front_ = vmath::vec3(
+            cos(degToRad(yaw)) * cos(degToRad(pitch)),
+            sin(degToRad(pitch)),
+            sin(degToRad(yaw)) * cos(degToRad(pitch)));
+
+        front = vmath::normalize(front_);
+
+        // Recalculate right
+        right = vmath::normalize(vmath::cross(front, worldUp));
+
+        // Recalculate up
+        up = vmath::normalize(vmath::cross(right, front));
+
+        // Updating Position
+        // position = calculateBezierCurve(this.bezierPoints, this.time, null, 0);
+        position[0] = deCasteljau(time, extractColumn(bezierPoints, 0));
+        position[1] = deCasteljau(time, extractColumn(bezierPoints, 1));
+        position[2] = deCasteljau(time, extractColumn(bezierPoints, 2));
+
+        float distance = 2.0f * (position[1] - 0.0f);
+        position[1] -= distance;
+    }
+
     // Calculates viewMatrix based on the point returned by the bezier curve for current time.
     vmath::mat4 getViewMatrix(void)
     {

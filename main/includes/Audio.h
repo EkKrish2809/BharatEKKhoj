@@ -16,7 +16,6 @@ public:
 	int initializeAudio(void)
 	{
 		// function declarations
-		void uninitializeAudio(void);
 																												
 		// code
 		alutInit(NULL, NULL);
@@ -28,7 +27,7 @@ public:
 			return(-1);
 		}
 																											
-		audioBuffer = alutCreateBufferFromFile("./assets/music/MereSajanUssPar.wav");
+		audioBuffer = alutCreateBufferFromFile("./assets/audio/videoplayback.wav");
 		error = alutGetError();
 		if (error != ALUT_ERROR_NO_ERROR)
 		{
@@ -82,7 +81,7 @@ public:
 			error = alGetError();
 			if (error != AL_NO_ERROR)
 			{
-				printf("alSourceStop() Failed..\n");
+				// printf("alSourceStop() Failed..\n");
 			}
 		}
 																										
@@ -90,14 +89,14 @@ public:
 		error = alGetError();
 		if (error != AL_NO_ERROR)
 		{
-			printf("alSourcei() Failed : Attaching Audio Buffer To Audio Source Failed.\n");
+			// printf("alSourcei() Failed : Attaching Audio Buffer To Audio Source Failed.\n");
 		}
 																										
 		alDeleteSources(1, &audioSource);
 		error = alGetError();
 		if (error != AL_NO_ERROR)
 		{
-			printf("alDeleteSource() Failed : DeletingAudio Source Failed.\n");
+			// printf("alDeleteSource() Failed : DeletingAudio Source Failed.\n");
 		}
 		else
 			audioSource = 0;
@@ -106,7 +105,7 @@ public:
 		error = alGetError();
 		if (error != AL_NO_ERROR)
 		{
-			printf("alDeleteBuffers() Failed : Deleting Audio Buffer Failed.\n");
+			// printf("alDeleteBuffers() Failed : Deleting Audio Buffer Failed.\n");
 		}
 		else
 			audioBuffer = 0;

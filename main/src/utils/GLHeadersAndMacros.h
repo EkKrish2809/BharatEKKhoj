@@ -29,3 +29,22 @@ enum GLShaderType
 	COMPUTE
 };
 
+
+#define SCENE_0_TIMER 0.0
+#define SCENE_1_TIMER 16.0
+#define SCENE_2_TIMER 26.0
+#define SCENE_3_TIMER 36.0
+#define SCENE_4_TIMER 46.0
+#define SCENE_5_TIMER 56.0
+#define SCENE_6_TIMER 66.0
+
+
+
+
+#define SCENE_1 0
+#define SCENE_2 1
+#define SCENE_3 2
+//50.0f // entering into earth [lava terrain]
+
+
+

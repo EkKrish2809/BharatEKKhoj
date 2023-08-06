@@ -277,6 +277,7 @@ bool LinkShaderProgramObject(GLuint shaderProgramObject)
 	if (status == GL_FALSE)
 	{
 		PrintLog("Shader Program Linking Failed.\n");
+		printf("Shader Program Linking Failed.\n");
 		glGetProgramiv(shaderProgramObject, GL_INFO_LOG_LENGTH, &infoLogLength);
 		if (infoLogLength > 0)
 		{
@@ -286,6 +287,7 @@ bool LinkShaderProgramObject(GLuint shaderProgramObject)
 				GLsizei written;
 				glGetProgramInfoLog(shaderProgramObject, infoLogLength, &written, log);
 				PrintLog("Shader Program Linking Log : %s\n", log);
+				printf("Shader Program Linking Log : %s\n", log);
 				free(log);
 				return(false);
 			}

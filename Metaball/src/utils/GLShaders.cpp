@@ -157,6 +157,7 @@ GLuint CreateAndCompileShaderObjects(const char *shaderFilename, GLShaderType sh
 	if (fdShaderFile == -1)
 	{
 		PrintLog("Failed To Open Shader File %s! Exitting Now ...\n", shaderFilename);
+		printf("Failed To Open Shader File %s! Exitting Now ...\n", shaderFilename);
 		return(0);
 	}
 
@@ -166,6 +167,7 @@ GLuint CreateAndCompileShaderObjects(const char *shaderFilename, GLShaderType sh
 	if(shaderSourceCodeBuffer == NULL)
 	{
 		PrintLog("Malloc Failed For ShaerSourceCodeBuffer\n");
+		printf("Malloc Failed For ShaerSourceCodeBuffer\n");
 		exit(0);
 	}
 	lseek(fdShaderFile, 0, SEEK_SET);
@@ -174,6 +176,7 @@ GLuint CreateAndCompileShaderObjects(const char *shaderFilename, GLShaderType sh
 	if (shaderFileSize1 < 0)
 	{
 		PrintLog("Failed To Read Shader File %s! Exitting Now ...\n", shaderFilename);
+		printf("Failed To Read Shader File %s! Exitting Now ...\n", shaderFilename);
 		return(0);
 	}
 
@@ -224,6 +227,7 @@ GLuint CreateAndCompileShaderObjects(const char *shaderFilename, GLShaderType sh
 	if (shaderObject == 0)
 	{
 		PrintLog("\"%s\" : Failed To Create %s Shader Object! Exitting Now ...\n", shaderFilename, shaderNameTag);
+		printf("\"%s\" : Failed To Create %s Shader Object! Exitting Now ...\n", shaderFilename, shaderNameTag);
 		return(0);
 	}
 
@@ -239,6 +243,7 @@ GLuint CreateAndCompileShaderObjects(const char *shaderFilename, GLShaderType sh
 	if (status == GL_FALSE)
 	{
 		PrintLog("\"%s\" : %s Shader Compilation Failed.\n", shaderFilename, shaderNameTag);
+		printf("\"%s\" : %s Shader Compilation Failed.\n", shaderFilename, shaderNameTag);
 		glGetShaderiv(shaderObject, GL_INFO_LOG_LENGTH, &infoLogLength);
 		if (infoLogLength > 0)
 		{
@@ -278,6 +283,7 @@ bool LinkShaderProgramObject(GLuint shaderProgramObject)
 	if (status == GL_FALSE)
 	{
 		PrintLog("Shader Program Linking Failed.\n");
+		printf("Shader Program Linking Failed.\n");
 		glGetProgramiv(shaderProgramObject, GL_INFO_LOG_LENGTH, &infoLogLength);
 		if (infoLogLength > 0)
 		{
